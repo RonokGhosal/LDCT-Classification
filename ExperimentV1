@@ -1,0 +1,66 @@
+Author Ronok Ghosal - Dec.28.2024 - initial code
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report, confusion_matrix
+import tensorflow as tf
+from tensorflow.keras import layers, models
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+
+from google.colab import drive
+drive.mount('/content/drive')
+
+dataset_path = "/content/drive/MyDrive/CTData/"
+
+train = pd.read_csv(dataset_path + "stage_2_train.csv")
+
+
+# Step 1: Check for duplicate entries
+duplicates = train.duplicated()
+print(f"Number of duplicate rows: {duplicates.sum()}")
+
+# Remove duplicates if any
+train = train.drop_duplicates()
+
+# Step 2: Check for missing labels
+missing_labels = train['Label'].isnull().sum()
+print(f"Number of rows with missing labels: {missing_labels}")
+
+# Optionally, drop rows with missing labels or handle them as needed
+train = train.dropna(subset=['Label'])
+
+# Save the cleaned dataset (optional)
+train.to_csv('cleaned_train.csv', index=False)
+df = pd.read_csv('cleaned_train.csv')  # Replace with your cleaned file
+
+# Split into train and test datasets
+train_df, test_df = train_test_split(df, test_size=0.2, random_state=42)
+
+print(train_df.head())
+
+train_df[['ID_type', 'subtype']] = train_df['ID'].str.split('_', n=1, expand=True)
+X = train_df['subtype']
+y = train_df['Label']
+
+# Convert Text to Numeric Features using CountVectorizer
+vectorizer = CountVectorizer()
+X_transformed = vectorizer.fit_transform(X)
+
+# Split the dataset into Training and Testing sets
+X_train, X_test, y_train, y_test = train_test_split(X_transformed, y, test_size=0.2, random_state=42)
+
+# Initialize and Train a Model
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+# Evaluate the Model
+y_pred = model.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+
+print(f"Model Accuracy: {accuracy:.2f}")

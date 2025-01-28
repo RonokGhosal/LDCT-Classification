@@ -1,0 +1,41 @@
+Author - Ronok Ghosal - Jan.1.2025
+Project Overview
+This project focuses on the RSNA Intracranial Hemorrhage Detection competition on Kaggle. The main goal is to classify different types of intracranial hemorrhages (ICH) from medical imaging data. Detecting these hemorrhages quickly and accurately is crucial because they can be life-threatening if not identified in time.
+
+I chose this project because it combines a real-world medical challenge with the power of machine learning. By exploring how AI can assist in diagnosing conditions like these, I hope to contribute to improving healthcare tools and patient outcomes.
+
+What the Code Does
+Step 1: Cleaning the Data
+The first step is to ensure the data is clean and reliable:
+
+Loading the Dataset:
+
+The dataset is loaded from Google Drive and contains patient IDs, the subtype of hemorrhage, and whether a hemorrhage is present (the label). This is the core information the model needs to learn from.
+Removing Duplicates:
+
+Duplicate entries are checked and removed to make sure the same data doesn’t appear multiple times, which could distort the model's training.
+Handling Missing Labels:
+
+Since labels are essential for training, any rows without them are dropped. This ensures the model is only working with complete data.
+Splitting the Data:
+
+The cleaned data is divided into training and testing sets, with 80% for training and 20% for testing. This split allows us to train the model on one part and test it on another to see how well it performs.
+Step 2: Preparing the Features
+After cleaning, the data needs to be transformed into something the machine learning model can understand:
+
+Extracting Features:
+
+The ID column is split into two parts: ID_type (e.g., the type of scan) and subtype (e.g., specific details about the scan). I focus on the subtype as it likely holds meaningful patterns related to the labels.
+Converting Text to Numbers:
+
+Since machine learning models can’t process raw text, the subtype column is converted into a numerical format using CountVectorizer. This technique turns text into a matrix of word counts, which the model can analyze.
+Step 3: Building and Training the Model
+Choosing the Model:
+
+I started with Logistic Regression because it’s simple and effective for binary classification tasks like this (deciding if there’s a hemorrhage or not). It also helps establish a baseline performance for comparison if I later use more complex models.
+Training the Model:
+
+The processed data is fed into the logistic regression model, and it learns to recognize patterns that distinguish between the presence and absence of hemorrhages.
+Evaluating Performance:
+
+After training, the model’s predictions are tested on unseen data (the test set). I calculate accuracy to see how often the model’s predictions match the actual labels.
